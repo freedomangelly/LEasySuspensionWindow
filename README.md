@@ -1,20 +1,46 @@
 # 悬浮窗框架
 
+# 我的理念概述
+我的理念的是能用一行代码解决的是，绝对不用两行
+其实编写依赖库的目的就是将一个功能尽可能的完善
+代码调用方便，简洁
 
-#### 集成步骤
+# 这个框架也是在遇到使用Toast受阻，我们的一个小朋友的猪秘编写，我在他的基础上再次的封装，生成了这套框架，使用这个框架最主要的原因就是，Toast显示的时间可以自己控制，而不是固定的那两个时间
 
-```groovy
+[悬浮窗github](https://github.com/freedomangelly/LEasySuspensionWindow)
+
+# 框架优点
+* 支持自定义 Toast 动画样式
+* 支持自定义 Toast 显示时长
+* 支持监听 Toast 的显示和销毁
+* 支持监听 Toast 中点击事件
+* 支持一键开启 Toast 拖拽功能（悬浮窗功能）
+* 支持 Toast 全局显示
+
+#框架环境的集成
+
+```
+buildscript {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+ ```java
 dependencies {
     // 悬浮窗框架：https://github.com/getActivity/XToast
     implementation 'com.github.freedomangelly:LEasySuspensionWindow:0.0.0.1'
 }
 ```
-
-#### 使用案例
-
-* Java 用法
-
-```java
+#api的使用
+调用方式使用建造者模式
+```
 // 传入 Activity 对象表示设置成局部的，不需要有悬浮窗权限
 // 传入 Application 对象表示设置成全局的，但需要有悬浮窗权限
 new LEasyFloatToast<>(XToastActivity.this)
@@ -43,62 +69,21 @@ new LEasyFloatToast<>(XToastActivity.this)
         })
         .show();
 ```
-
-
-#### 没有悬浮窗权限如何全局显示？
-
-* 没有悬浮窗权限是不能全局显示在其他应用上的，但是全局显示在自己的应用上是可以实现的
-
-* 但是当前 Activity 创建的悬浮窗只能在当前 Activity 上面显示，如果想在所有的 Activity 都显示需要做特殊处理
-
-* 我们可以通过 Application 来监听所有 Activity 的生命周期方法，然后在每个 Activity.onCreate 时创建悬浮窗
-
-```java
-public final class FloatingLifecycle implements Application.ActivityLifecycleCallbacks {
+# 不添加权限变通的方法
+这套框架是基于悬浮窗的原理进行绘制，我们都知道这个得需要悬浮窗权限
+这里有一个变通的方法，就是监听所有的Activity生命周期，在Activity创建的时候进行创建（不过不推荐）
+```
+public final class FLifecycle implements Application.ActivityLifecycleCallbacks {
 
     static void with(Application application) {
-        application.registerActivityLifecycleCallbacks(new FloatingLifecycle());
+        application.registerActivityLifecycleCallbacks(new FLifecycle());
     }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        new XToast<>(activity)
-                .setXXXX()
+        new LEasyFloatToast<>(activity)
+                .setText("hello")
                 .show();
     }
-
-    @Override
-    public void onActivityStarted(Activity activity) {}
-
-    @Override
-    public void onActivityResumed(Activity activity) {}
-
-    @Override
-    public void onActivityPaused(Activity activity) {}
-
-    @Override
-    public void onActivityStopped(Activity activity) {}
-
-    @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
-
-    @Override
-    public void onActivityDestroyed(Activity activity) {}
-}
+...
 ```
-
-#### 框架亮点（原生 Toast 无法实现的功能）
-
-* 支持自定义 Toast 动画样式
-
-* 支持自定义 Toast 显示时长
-
-* 支持监听 Toast 的显示和销毁
-
-* 支持监听 Toast 中点击事件
-
-* 支持一键开启 Toast 拖拽功能
-
-* 支持 Toast 全局显示
-
-
