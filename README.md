@@ -17,7 +17,7 @@ dependencies {
 ```java
 // 传入 Activity 对象表示设置成局部的，不需要有悬浮窗权限
 // 传入 Application 对象表示设置成全局的，但需要有悬浮窗权限
-new XToast<>(XToastActivity.this)
+new LEasyFloatToast<>(XToastActivity.this)
         .setView(R.layout.toast_hint)
         // 设置成可拖拽的
         //.setDraggable()
