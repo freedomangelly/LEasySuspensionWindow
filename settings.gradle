@@ -1,0 +1,3 @@
+include ':librarySuspensionWindow'
+include ':app'
+rootProject.name = "LEasySuspensionWindow"
